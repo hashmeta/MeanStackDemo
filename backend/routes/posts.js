@@ -1,7 +1,7 @@
 const express = require('express')
-const router=express.Router()
 const multer=require('multer')
 const Post=require('../models/post')
+const router=express.Router()
 const MIME_TYPE_MAP={
     'image/png':'png',
     'image/jpeg':'jpeg',
@@ -9,30 +9,31 @@ const MIME_TYPE_MAP={
 }
 
 const storage=multer.diskStorage({
-    destination:(req,res,callback)=>{
-        const isValid=MIME_TYPE_MAP[file.mimetype]
-        let error=new Error('Invalid mine type')
-        if(isValid){
-            error=null
-        }
-        callback(null,'backend/images')
-    },
-    filename:(req,res,callback)=>{
-        const name=file.originalname.toLowerCase().split(' ').join('-')
+    destination:(req,file,callback)=>{
+        callback(null,"backend/images")
+        
+},
+    filename:(req,file,callback)=>{
         const ext=MIME_TYPE_MAP[file.mimetype]
-        callback(null,name+'-'+Date.now()+'.'+ext)
+        callback(null,Date.now()+'.'+ext)
     }
 })
-router.post('',multer(storage).single('image'),(req,res)=>{
+// var cpUpload=upload.fields([{name:'images'}])
+// router.post('',multer({storage:storage}).array("images",12),(req,res,next)=>{
+
+var upload=multer({storage:storage})
+router.post('',upload.fields([{name:'images'}]),(req,res,next)=>{
     const post= new Post({
         title:req.body.title,
         content:req.body.content
     })
     post.save().then(createdPost=>
-        res.status(201).json({
-        message:'Post added sucessfully',
-        postId:createdPost._id
-    }))
+        res.status(200).json({
+            message:'Post added sucessfully',
+            postId:createdPost._id,
+
+        })
+    )
 })
 router.put('/:id',(req,res)=>{
     const post= new Post({

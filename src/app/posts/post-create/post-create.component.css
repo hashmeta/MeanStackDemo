@@ -22,4 +22,19 @@ input[type='file']{
 .image-preview img{
     height:100%
 }
+.image-preview .Deletebutton{
+    float: right
+}
 
+
+.image-preview .nested-image-preview{
+    height: 5rem;
+    margin:1rem 0
+}
+
+.image-preview .nested-image-preview img{
+    height:100%
+}
+.image-preview .nested-image-preview .Deletebutton{
+    float: right
+}
